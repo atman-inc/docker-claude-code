@@ -16,16 +16,14 @@ Node.js v22、SSH、Git をサポートした Claude Code 用の Docker イメ�
 プライベートリポジトリのため、GitHub Container Registry への認証が必要です：
 
 ```bash
-# GitHub CLI で認証（推奨）
-gh auth login
-echo $GITHUB_TOKEN | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
-```
+# 既にログインしている場合はログアウト
+gh auth logout
 
-または、GitHub Personal Access Token を使用：
+# write:packages スコープ付きでログイン
+gh auth login -s write:packages
 
-```bash
-# GitHub Personal Access Token を使用して認証
-docker login ghcr.io -u YOUR_GITHUB_USERNAME
+# GHCRにログイン
+docker login ghcr.io -u <GitHubユーザー名> -p$(gh auth token)
 ```
 
 ### 2. イメージの取得
@@ -139,11 +137,12 @@ docker run -it --rm \
 # 認証状態の確認
 docker system info | grep -i registry
 
-# 認証情報のクリア
-docker logout ghcr.io
+# GitHub CLI からログアウト
+gh auth logout
 
-# 再認証
-docker login ghcr.io
+# 再認証（write:packages スコープ付き）
+gh auth login -s write:packages
+docker login ghcr.io -u <GitHubユーザー名> -p$(gh auth token)
 ```
 
 ### パーミッションエラー
