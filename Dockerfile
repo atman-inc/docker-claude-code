@@ -11,5 +11,6 @@ RUN apt update && apt install -y \
 
 RUN npm install -g @anthropic-ai/claude-code
 
-USER node
+RUN useradd -m -s /bin/bash claude
+USER claude
 WORKDIR /workspace

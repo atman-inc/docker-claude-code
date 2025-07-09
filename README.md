@@ -16,16 +16,16 @@ Node.js v22、SSH、Git をサポートした Claude Code 用の Docker イメ�
 プライベートリポジトリのため、GitHub Container Registry への認証が必要です：
 
 ```bash
-# GitHub Personal Access Token を使用して認証
-docker login ghcr.io -u YOUR_GITHUB_USERNAME
-```
-
-または、GitHub CLI を使用：
-
-```bash
 # GitHub CLI で認証（推奨）
 gh auth login
 echo $GITHUB_TOKEN | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-stdin
+```
+
+または、GitHub Personal Access Token を使用：
+
+```bash
+# GitHub Personal Access Token を使用して認証
+docker login ghcr.io -u YOUR_GITHUB_USERNAME
 ```
 
 ### 2. イメージの取得
@@ -33,9 +33,6 @@ echo $GITHUB_TOKEN | docker login ghcr.io -u YOUR_GITHUB_USERNAME --password-std
 ```bash
 # 最新版を取得
 docker pull ghcr.io/atman-inc/docker-claude-code:latest
-
-# 特定のコミット版を取得
-docker pull ghcr.io/atman-inc/docker-claude-code:main-<commit-sha>
 ```
 
 ### 3. 基本的な実行
@@ -65,10 +62,10 @@ docker run -it --rm \
   -v /path/to/your/project:/workspace \
   ghcr.io/atman-inc/docker-claude-code:latest
 
-# 複数のディレクトリをマウント
+# SSH キーをマウント（オプション）
 docker run -it --rm \
-  -v /path/to/project:/workspace \
-  -v /path/to/config:/config \
+  -v $(pwd):/workspace \
+  -v ~/.ssh:/home/claude/.ssh:ro \
   ghcr.io/atman-inc/docker-claude-code:latest
 ```
 
@@ -77,41 +74,17 @@ docker run -it --rm \
 コンテナ内で Claude Code を使用する方法：
 
 ```bash
-# コンテナ内でシェルを起動
+# コンテナ内で直接 Claude を実行（基本的な使い方）
+docker run -it --rm \
+  -v $(pwd):/workspace \
+  ghcr.io/atman-inc/docker-claude-code:latest \
+  claude --help
+
+# コンテナ内でシェルを起動（オプション）
 docker run -it --rm \
   -v $(pwd):/workspace \
   ghcr.io/atman-inc/docker-claude-code:latest \
   /bin/bash
-
-# コンテナ内で直接 Claude Code を実行
-docker run -it --rm \
-  -v $(pwd):/workspace \
-  ghcr.io/atman-inc/docker-claude-code:latest \
-  claude-code --help
-```
-
-### 実用的な使用例
-
-```bash
-# Node.js プロジェクトでの開発
-docker run -it --rm \
-  -v $(pwd):/workspace \
-  -p 3000:3000 \
-  ghcr.io/atman-inc/docker-claude-code:latest \
-  /bin/bash
-
-# Git リポジトリでの作業（SSH キーをマウント）
-docker run -it --rm \
-  -v $(pwd):/workspace \
-  -v ~/.ssh:/home/node/.ssh:ro \
-  ghcr.io/atman-inc/docker-claude-code:latest
-
-# 環境変数を設定して実行
-docker run -it --rm \
-  -v $(pwd):/workspace \
-  -e NODE_ENV=development \
-  -e TZ=Asia/Tokyo \
-  ghcr.io/atman-inc/docker-claude-code:latest
 ```
 
 ## Docker Compose での利用
@@ -125,7 +98,7 @@ services:
     image: ghcr.io/atman-inc/docker-claude-code:latest
     volumes:
       - .:/workspace
-      - ~/.ssh:/home/node/.ssh:ro
+      - ~/.ssh:/home/claude/.ssh:ro
     environment:
       - NODE_ENV=development
       - TZ=Asia/Tokyo
@@ -180,16 +153,6 @@ docker login ghcr.io
 docker run -it --rm \
   -v $(pwd):/workspace \
   -u $(id -u):$(id -g) \
-  ghcr.io/atman-inc/docker-claude-code:latest
-```
-
-### ネットワークエラー
-
-```bash
-# ホストネットワークを使用
-docker run -it --rm \
-  --network host \
-  -v $(pwd):/workspace \
   ghcr.io/atman-inc/docker-claude-code:latest
 ```
 
