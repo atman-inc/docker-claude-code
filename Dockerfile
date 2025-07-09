@@ -1,6 +1,6 @@
 FROM node:22-bullseye
 
-ARG TZ=America/Los_Angeles
+ARG TZ=Asia/Tokyo
 ENV TZ=$TZ
 
 RUN apt update && apt install -y \

@@ -1,30 +1,30 @@
 # Docker Claude Code
 
-A Docker image for Claude Code with Node.js v22, SSH, and Git support.
+Node.js v22、SSH、Git をサポートした Claude Code 用の Docker イメージです。
 
-## Features
+## 機能
 
-- Node.js v22 runtime environment
-- SSH client and server support
-- Git version control
-- Claude Code AI assistant integration
+- Node.js v22 ランタイム環境
+- SSH クライアント・サーバーサポート
+- Git バージョン管理
+- Claude Code AI アシスタント統合
 
-## Building the Image
+## イメージのビルド
 
 ```bash
 docker build -t claude-code .
 ```
 
-## Running the Container
+## コンテナの実行
 
 ```bash
 docker run -it --rm claude-code
 ```
 
-## Requirements
+## 要件
 
 - Docker
 
-## License
+## ライセンス
 
-MIT License - see LICENSE file for details.
+MIT License - 詳細は LICENSE ファイルを参照してください。
