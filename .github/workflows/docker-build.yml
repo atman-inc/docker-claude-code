@@ -1,0 +1,30 @@
+name: Docker Build Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Build Docker image
+      run: docker build -t claude-code .
+      
+    - name: Test Node.js version
+      run: docker run --rm claude-code node --version
+      
+    - name: Test SSH installation
+      run: docker run --rm claude-code ssh -V
+      
+    - name: Test Git installation
+      run: docker run --rm claude-code git --version
+      
+    - name: Test Claude Code installation
+      run: docker run --rm claude-code claude --version
