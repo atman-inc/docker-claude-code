@@ -12,5 +12,9 @@ RUN apt update && apt install -y \
 RUN npm install -g @anthropic-ai/claude-code
 
 RUN useradd -m -s /bin/bash claude
+
+# Create .claude directory for configuration files
+RUN mkdir -p /home/claude/.claude && chown claude:claude /home/claude/.claude
+
 USER claude
 WORKDIR /workspace

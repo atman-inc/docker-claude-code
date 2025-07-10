@@ -65,6 +65,13 @@ docker run -it --rm \
   -v $(pwd):/workspace \
   -v ~/.ssh:/home/claude/.ssh:ro \
   ghcr.io/atman-inc/docker-claude-code:latest
+
+# Claude設定ファイルの永続化（推奨）
+docker run -it --rm \
+  -v $(pwd):/workspace \
+  -v ~/.claude.json:/home/claude/.claude.json \
+  -v ~/.claude:/home/claude/.claude \
+  ghcr.io/atman-inc/docker-claude-code:latest
 ```
 
 ### Claude Code の実行
@@ -97,6 +104,8 @@ services:
     volumes:
       - .:/workspace
       - ~/.ssh:/home/claude/.ssh:ro
+      - ~/.claude.json:/home/claude/.claude.json
+      - ~/.claude:/home/claude/.claude
     environment:
       - NODE_ENV=development
       - TZ=Asia/Tokyo
