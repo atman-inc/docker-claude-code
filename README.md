@@ -50,27 +50,12 @@ docker run -d --name claude-code ghcr.io/atman-inc/docker-claude-code:latest
 ローカルのプロジェクトディレクトリをコンテナ内の作業ディレクトリ（`/workspace`）にマウントして使用：
 
 ```bash
-# カレントディレクトリをマウント
-docker run -it --rm \
-  -v $(pwd):/workspace \
-  ghcr.io/atman-inc/docker-claude-code:latest
-
-# 特定のディレクトリをマウント
+# 推奨設定（全機能を含む）
 docker run -it --rm \
   -v /path/to/your/project:/workspace \
-  ghcr.io/atman-inc/docker-claude-code:latest
-
-# SSH キーをマウント（オプション）
-docker run -it --rm \
-  -v $(pwd):/workspace \
-  -v ~/.ssh:/home/claude/.ssh:ro \
-  ghcr.io/atman-inc/docker-claude-code:latest
-
-# Claude設定ファイルの永続化（推奨）
-docker run -it --rm \
-  -v $(pwd):/workspace \
-  -v ~/.claude.json:/home/claude/.claude.json \
-  -v ~/.claude:/home/claude/.claude \
+  -v ${HOME}/.ssh:/home/claude/.ssh:ro \
+  -v ${HOME}/.claude.json:/home/claude/.claude.json \
+  -v ${HOME}/.claude:/home/claude/.claude \
   ghcr.io/atman-inc/docker-claude-code:latest
 ```
 
@@ -103,9 +88,9 @@ services:
     image: ghcr.io/atman-inc/docker-claude-code:latest
     volumes:
       - .:/workspace
-      - ~/.ssh:/home/claude/.ssh:ro
-      - ~/.claude.json:/home/claude/.claude.json
-      - ~/.claude:/home/claude/.claude
+      - ${HOME}/.ssh:/home/claude/.ssh:ro
+      - ${HOME}/.claude.json:/home/claude/.claude.json
+      - ${HOME}/.claude:/home/claude/.claude
     environment:
       - NODE_ENV=development
       - TZ=Asia/Tokyo
