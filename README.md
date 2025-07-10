@@ -52,7 +52,7 @@ docker run -d --name claude-code ghcr.io/atman-inc/docker-claude-code:latest
 ```bash
 # 推奨設定（全機能を含む）
 docker run -it --rm \
-  -v /path/to/your/project:/workspace \
+  -v ${PWD}:/workspace \
   -v ${HOME}/.ssh:/home/claude/.ssh:ro \
   -v ${HOME}/.claude.json:/home/claude/.claude.json \
   -v ${HOME}/.claude:/home/claude/.claude \
